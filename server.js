@@ -60,6 +60,70 @@ app.get('/auth', function(req, res) {
         res.sendfile(__dirname + '/templates/login.html');
 });
 
+// define Schemas
+var Schema = mongoose.Schema;
+var ObjectId = Schema.ObjectId;
+
+// User Schema
+var User = mongoose.model('User', new Schema ({
+    id:ObjectId,
+    facebook_id:String,
+    firstName: String,
+    lastName: String,
+    email:String,
+    wcaID:String,
+    provider:String
+}));
+
+// Facebook login
+passport.use(new FacebookStrategy({
+        clientID: '715501051892114',
+        clientSecret: 'd27cf65225c66a8d2537e9fdcd9a4805',
+        callbackURL: '/auth/facebook/callback'
+    }, function(accessToken, refreshToken, profile, done) {
+        process.nextTick(function() {
+            User.findOne({'email':profile.emails[0].value}, function(err, user) {
+                if (err)
+                    return done(err);
+                if (user)
+                    return done(null, user);
+                else {
+                    var newUser = new User();
+                    newUser.facebook_id = profile.id;
+                    newUser.firstName = profile.name.givenName;
+                    newUser.lastName = profile.name.familyName;
+                    newUser.email = profile.emails[0].value;
+                    newUser.provider = 'facebook';
+                    newUser.save(function(err) {
+                        if (err)
+                            throw err;
+                        return done(null, newUser);
+                    });
+                }
+            });
+        });
+    }
+));
+
+// facebook authentication route
+app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
+
+// facebook callback route
+app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/contest', failureRedirect: '/auth' }));
+
+// get authorization status
+app.get('/authStatus', function(req, res) {
+    if (req.user)
+        res.json({status:'connected'});
+    else
+        res.json({status:'not_authorized'});
+});
+
+// send user info such as name, email, and facebook id
+app.get('/userInfo', function(req, res) {
+    res.send(req.user);
+});
+
 // listen on port and ip
 var ip = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
 var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
