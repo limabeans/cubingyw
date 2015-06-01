@@ -4,6 +4,15 @@ var app = angular.module('cubingjApp', ['ui.bootstrap']);
 
 // controller for the home page and links page
 app.controller('contestController', function($scope, $http, $interval) {
+
+  // ping the server on an interval to show that the user is currently present
+  $interval(
+    function() {
+      $http.post('/userTimeStamp').success(function(response) {
+          console.log(response);
+        });
+    }, 1000);
+  
   // get authorization status
   $scope.authStatus = '';
   $http.get('/authStatus').success(function(response) {
@@ -13,6 +22,15 @@ app.controller('contestController', function($scope, $http, $interval) {
       $scope.authStatus = 'Login';
   });
 
+
+  // GET request of userlist from the server
+  $http.get('/userlist').success(function(response) {
+    $scope.users = response;
+  });
+
+
+
+  // code involving the timer
 
   $scope.now = 0; // updated using Date.now()
   $scope.time = 0;
@@ -49,6 +67,7 @@ app.controller('contestController', function($scope, $http, $interval) {
     $interval.cancel($scope.interval);
   }
 
+  // end of timer code
 
 });
 
@@ -70,3 +89,5 @@ window.fbAsyncInit = function() {
   js.src = "//connect.facebook.net/en_US/sdk.js";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
+
+

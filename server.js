@@ -125,6 +125,29 @@ app.get('/userInfo', function(req, res) {
     res.send(req.user);
 });
 
+
+// update user time stamp
+app.post('/userTimeStamp', function(req,res) {
+  var id = req.user._id;
+  User.update({_id: id}, 
+              {$set: {active: new Date()} }, 
+              function(err, user) {
+                if (err) return handleError(err);
+                console.log(user);
+                res.send(user);
+              });
+});
+
+
+// send a list of users
+app.get('/userlist', function(req,res) {
+  User.find({}, function(err,result) {
+    res.json(result);
+  });
+});
+
+
+
 // listen on port and ip
 var ip = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
 var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;

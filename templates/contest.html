@@ -50,10 +50,16 @@
         <h1>Contest</h1>
       </div>
 
-      <div class="timer container">
+      <div class="timer col-md-8">
         <h1>
           {{timer_display}}
         </h1>
+      </div>
+      <div class="col-md-4">
+        <h1>ACTIVE USERS</h1>
+        <ul>
+          <li ng-repeat="x in users">{{x.firstName}} {{x.lastName}} {{x.active}}</li>
+        </ul>
       </div>
 
 
