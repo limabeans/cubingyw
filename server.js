@@ -68,11 +68,12 @@ var ObjectId = Schema.ObjectId;
 var User = mongoose.model('User', new Schema ({
     id:ObjectId,
     facebook_id:String,
-    firstName: String,
-    lastName: String,
+    firstName:String,
+    lastName:String,
     email:String,
     wcaID:String,
-    provider:String
+    provider:String,
+    active:Date
 }));
 
 // Facebook login

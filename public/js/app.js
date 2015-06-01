@@ -4,7 +4,7 @@ var app = angular.module('cubingjApp', ['ui.bootstrap']);
 app.controller('cubingjController', function($scope, $http) {
 
   // get authorization status
-  $scope.authStatus = 'YW';
+  $scope.authStatus = '';
   $http.get('/authStatus').success(function(response) {
     if (response.status == 'connected')
       $scope.authStatus = 'Logout';
