@@ -53,6 +53,10 @@ app.get('/contest', function(req, res) {
 // authorization
 app.get('/auth', function(req, res) {
     if (req.user) {
+        User.update({_id: req.user._id}, {$set: {active: false}}, function(err, response) {
+            if (err)
+                return handleError(err);
+        });
         req.logout();
         res.redirect('/');
     }
@@ -79,8 +83,8 @@ var User = mongoose.model('User', new Schema ({
 
 // Facebook login
 passport.use(new FacebookStrategy({
-        clientID: '715501051892114',
-        clientSecret: 'd27cf65225c66a8d2537e9fdcd9a4805',
+        clientID: process.env.clientID,
+        clientSecret: process.env.clientSecret,
         callbackURL: '/auth/facebook/callback'
     }, function(accessToken, refreshToken, profile, done) {
         process.nextTick(function() {
@@ -152,50 +156,23 @@ setInterval(function() {
 
 // update user time stamp
 app.post('/userTimeStamp', function(req,res) {
-    var id = req.user._id;
-    User.update({_id: id},
-        { $set: {lastPing: Date.now()} },
-              function(err, response) {
-                  if (err)
-                    return handleError(err);
-              });
+    if (req.user) {
+        User.update({_id: req.user._id}, {$set: {lastPing: Date.now()}}, function(err, response) {
+            if (err)
+                return handleError(err);
+        });
+    }
     User.find({active:true}, function(err, result) {
         res.json(result);
     });
-  // User.findOne({_id: id}, function (err, user) {
-  //   res.send(user);
-  // });
-
-  // User.find($query: {}, 
-  //           $min: {active: five_seconds }, 
-  //           function(err,users) {
-  //             res.send(users);
-  //             console.log(users);
-  //           });
-  //User.find({}, function(err,users) {
-  //  var now = new Date();
-  //  var sixty_seconds = now - 10;
-  //  var active_users = [];
-  //  for (var i = 0; i < users.length; i++) {
-  //    if(users[i].active.getTime() > sixty_seconds) {
-  //      active_users.push(users[i]);
-  //      console.log(sixty_seconds);
-  //    }
-  //  }
-  //  res.send(active_users);
-  //});
-  //
-            
 });
 
 // send a list of users
-app.get('/userlist', function(req,res) {
-  User.find({}, function(err,result) {
-    res.json(result);
-  });
+app.get('/userList', function(req,res) {
+    User.find({active:true}, function(err,result) {
+        res.json(result);
+    });
 });
-
-
 
 // listen on port and ip
 var ip = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";

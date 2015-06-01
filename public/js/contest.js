@@ -5,31 +5,26 @@ var app = angular.module('cubingjApp', ['ui.bootstrap']);
 // controller for the home page and links page
 app.controller('contestController', function($scope, $http, $interval) {
 
-  // ping the server on an interval to show that the user is currently present
-  $interval(
-    function() {
-      $http.post('/userTimeStamp').success(function(response) {
-        console.log(response);
-        $scope.users = response;
-      });
+    // ping the server on an interval to show that the user is currently present
+    $interval(function() {
+        $http.post('/userTimeStamp').success(function(response) {
+            $scope.users = response;
+        });
     }, 1000);
-  
-  // get authorization status
-  $scope.authStatus = '';
-  $http.get('/authStatus').success(function(response) {
+
+    // get authorization status
+    $scope.authStatus = '';
+    $http.get('/authStatus').success(function(response) {
     if (response.status == 'connected')
-      $scope.authStatus = 'Logout';
+        $scope.authStatus = 'Logout';
     else
-      $scope.authStatus = 'Login';
-  });
+        $scope.authStatus = 'Login';
+    });
 
-
-  // GET request of userlist from the server
-  $http.get('/userlist').success(function(response) {
-    $scope.users = response;
-  });
-
-
+    // GET request of userlist from the server
+    $http.get('/userList').success(function(response) {
+        $scope.users = response;
+    });
 
   // code involving the timer
 
