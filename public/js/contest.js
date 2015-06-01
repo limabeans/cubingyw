@@ -10,7 +10,7 @@ app.controller('contestController', function($scope, $http, $interval) {
     function() {
       $http.post('/userTimeStamp').success(function(response) {
         console.log(response);
-        $scope.users = [response];
+        $scope.users = response;
       });
     }, 1000);
   
