@@ -9,8 +9,9 @@ app.controller('contestController', function($scope, $http, $interval) {
   $interval(
     function() {
       $http.post('/userTimeStamp').success(function(response) {
-          console.log(response);
-        });
+        console.log(response);
+        $scope.users = [response];
+      });
     }, 1000);
   
   // get authorization status

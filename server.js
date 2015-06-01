@@ -131,10 +131,10 @@ app.post('/userTimeStamp', function(req,res) {
   var id = req.user._id;
   User.update({_id: id}, 
               {$set: {active: new Date()} }, 
-              function(err, user) {
+              function(err, response) {
                 if (err) return handleError(err);
-                console.log(user);
-                res.send(user);
+                console.log(req.user);
+                res.send(req.user);
               });
 });
 
