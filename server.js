@@ -31,7 +31,7 @@ passport.deserializeUser(function(user, done) {
 });
 
 // connect to mongoDB
-var connectionString = process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost/nucubing';
+var connectionString = process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost/cubingj';
 mongoose.connect(connectionString);
 
 // render static files
@@ -73,7 +73,8 @@ var User = mongoose.model('User', new Schema ({
     email:String,
     wcaID:String,
     provider:String,
-    active:Date
+    lastPing:{type:Number, default:Date.now()},
+    active:{type:Boolean, default:true}
 }));
 
 // Facebook login
@@ -125,16 +126,31 @@ app.get('/userInfo', function(req, res) {
     res.send(req.user);
 });
 
+var interval = 5 * 1000;
+setInterval(function() {
+    User.find({}, function(err, result) {
+        for (var i = 0; i < result.length; i++) {
+            if (Date.now() - 3000 > result[i].lastPing)
+                result[i].active = false;
+            else
+                result[i].active = true;
+            //console.log(result[i].active);
+        }
+    });
+}, interval);
 
 // update user time stamp
 app.post('/userTimeStamp', function(req,res) {
-  var id = req.user._id;
-  User.update({_id: id},
-              {$set: {active: new Date()} },
+    var id = req.user._id;
+    User.update({_id: id},
+        { $set: {lastPing: Date.now()} },
               function(err, response) {
-                if (err)
-                  return handleError(err);
+                  if (err)
+                    return handleError(err);
               });
+    User.find({active:true}, function(err, result) {
+        res.json(result);
+    });
   // User.findOne({_id: id}, function (err, user) {
   //   res.send(user);
   // });
@@ -145,19 +161,19 @@ app.post('/userTimeStamp', function(req,res) {
   //             res.send(users);
   //             console.log(users);
   //           });
-  User.find({}, function(err,users) {
-    var now = new Date();
-    var sixty_seconds = now - 10;
-    var active_users = [];
-    for (var i = 0; i < users.length; i++) {
-      if(users[i].active.getTime() > sixty_seconds) {
-        active_users.push(users[i]);
-        console.log(sixty_seconds);
-      }
-    }
-    res.send(active_users);
-  });
-  
+  //User.find({}, function(err,users) {
+  //  var now = new Date();
+  //  var sixty_seconds = now - 10;
+  //  var active_users = [];
+  //  for (var i = 0; i < users.length; i++) {
+  //    if(users[i].active.getTime() > sixty_seconds) {
+  //      active_users.push(users[i]);
+  //      console.log(sixty_seconds);
+  //    }
+  //  }
+  //  res.send(active_users);
+  //});
+  //
             
 });
 
