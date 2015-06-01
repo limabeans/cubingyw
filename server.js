@@ -147,11 +147,12 @@ app.post('/userTimeStamp', function(req,res) {
   //           });
   User.find({}, function(err,users) {
     var now = new Date();
-    var ten_seconds = now - 10;
+    var sixty_seconds = now - 10;
     var active_users = [];
     for (var i = 0; i < users.length; i++) {
-      if(users[i].active > ten_seconds) {
+      if(users[i].active.getTime() > sixty_seconds) {
         active_users.push(users[i]);
+        console.log(sixty_seconds);
       }
     }
     res.send(active_users);
