@@ -130,11 +130,22 @@ var interval = 5 * 1000;
 setInterval(function() {
     User.find({}, function(err, result) {
         for (var i = 0; i < result.length; i++) {
-            if (Date.now() - 3000 > result[i].lastPing)
-                result[i].active = false;
-            else
-                result[i].active = true;
-            //console.log(result[i].active);
+            if (Date.now() - 3000 > result[i].lastPing) {
+                User.update({_id: result[i]._id},
+                    {$set: {active: false}},
+                    function (err, response) {
+                        if (err)
+                            throw err;
+                    });
+            }
+            else {
+                User.update({_id: result[i]._id},
+                    {$set: {active: true}},
+                    function (err, response) {
+                        if (err)
+                            throw err;
+                    });
+            }
         }
     });
 }, interval);
