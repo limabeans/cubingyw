@@ -126,11 +126,11 @@ app.get('/userInfo', function(req, res) {
     res.send(req.user);
 });
 
-var interval = 5 * 1000;
+var interval = 2000;
 setInterval(function() {
     User.find({}, function(err, result) {
         for (var i = 0; i < result.length; i++) {
-            if (Date.now() - 3000 > result[i].lastPing) {
+            if (Date.now() - 2000 > result[i].lastPing) {
                 User.update({_id: result[i]._id},
                     {$set: {active: false}},
                     function (err, response) {

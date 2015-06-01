@@ -56,13 +56,11 @@
         </h1>
       </div>
       <div class="col-md-4">
-        <h1>ACTIVE USERS</h1>
+        <h1>Active Users</h1>
         <ul>
-          <li ng-repeat="x in users">{{x.firstName}} {{x.lastName}} {{x.active}}</li>
+          <li ng-repeat="user in users">{{user.firstName}} {{user.lastName}}</li>
         </ul>
       </div>
-
-
     </div>
   </body>
 </html>
