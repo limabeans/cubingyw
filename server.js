@@ -128,16 +128,17 @@ app.get('/userInfo', function(req, res) {
 
 // update user time stamp
 app.post('/userTimeStamp', function(req,res) {
-  var id = req.user._id;
-  User.update({_id: id}, 
-              {$set: {active: new Date()} }, 
-              function(err, response) {
-                if (err) return handleError(err);
-                console.log(req.user);
-                res.send(req.user);
-              });
+    var id = req.user._id;
+    User.update({_id: id},
+        {$set: {active: new Date()} },
+        function(err, response) {
+            if (err)
+                return handleError(err);
+        });
+    User.findOne({_id: id}, function (err, user) {
+        res.send(user);
+    });
 });
-
 
 // send a list of users
 app.get('/userlist', function(req,res) {
