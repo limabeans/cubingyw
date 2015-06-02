@@ -125,10 +125,14 @@ app.controller('contestController', function($scope, $http, $interval) {
 
   // express.io global variable
   io = io.connect();
+
+  $scope.solves = [];
   
   // receive solve result from server (may not necessarily be you) 
   io.on('solve_result', function(res) {
+    $scope.last_solve = res;
     console.log(res);
+    $scope.solves.push(res);
   });
   
 
