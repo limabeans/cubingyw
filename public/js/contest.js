@@ -38,11 +38,25 @@ app.controller('contestController', function($scope, $http, $interval) {
   $scope.spacePressed = function(event) {
     if(event.which === SPACEBAR) {
       if(!$scope.interval) {
+        // start of solve
         $scope.time = 0.000;
         $scope.start();
       } else {
+        // end of solve
         $scope.stop();
         $scope.interval = null;
+        console.log($scope.time);
+
+        var solveObject = {
+          solveTime: $scope.time,
+          solveType: '3x3x3'
+        };
+        
+        // $http.post('/newSolve', solveObject).success(function(response) {
+        //     //$scope.users = response;
+        // });
+
+        
       }
     }
   };

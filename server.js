@@ -81,6 +81,19 @@ var User = mongoose.model('User', new Schema ({
     active:{type:Boolean, default:true}
 }));
 
+// Solve Schema
+var Solve = mongoose.model('Solve' ,new Schema ( {
+  id:ObjectId,
+  personID:String,
+  solveDate: {type: Date, default: Date.now },
+  roomID:String,
+  solveTime:Number,
+  solvePenalty:String,
+  solveType:String,
+  solveComment:String,
+  solveIndex:Number
+}));
+
 // Facebook login
 passport.use(new FacebookStrategy({
         clientID: process.env.clientID,
@@ -173,6 +186,20 @@ app.get('/userList', function(req,res) {
         res.json(result);
     });
 });
+
+
+// POST for new solve result
+// app.post('/newSolve', function(req,res) {
+//   var solve = new Solve();
+//   solve.solveTime = req.body.solveTime;
+//   solve.solveType = req.body.solveType;
+  
+//   solve.save(function(err) {
+//     if (err) throw err;
+//   });
+
+  
+// });
 
 // listen on port and ip
 var ip = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
