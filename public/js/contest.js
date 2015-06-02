@@ -73,6 +73,11 @@ app.controller('contestController', function($scope, $http, $interval) {
   $scope.results[2][1].penalty = '(DNF)';
   $scope.results[2][1].comment = 'yolo';
 
+  // express.io global variable
+  io = io.connect();
+
+  $scope.solves = [];
+
   // code involving the timer
   $scope.now = 0; // updated using Date.now()
   $scope.time = 0;
@@ -95,6 +100,7 @@ app.controller('contestController', function($scope, $http, $interval) {
       } else if ($scope.isTiming === 1) {
         $scope.stopTimer();
         $scope.interval = null;
+
       }
     }
   };
@@ -104,39 +110,27 @@ app.controller('contestController', function($scope, $http, $interval) {
       $scope.isKeydown = 0;
       if ($scope.isTiming === 0) {
         $scope.isTiming = 1;
-        $scope.timerStyle = {'color':'black'};
+        $scope.timerStyle = {'color': 'black'};
         $scope.startTimer();
       } else if ($scope.isTiming === 1) {
         $scope.isTiming = 0;
+        var solveObject = {
+          solveTime: $scope.time,
+          solveType: '3x3x3'
+        };
+
+        // send to server after completing solve
+        io.emit('finished_solve', solveObject);
       }
     }
   };
 
-  //$scope.spacePressed = function(event) {
-  //  console.log(event);
-  //  if(event.which === 32) {
-  //    if(!$scope.interval) {
-  //      // start of solve
-  //      $scope.time = 0.000;
-  //      $scope.startTimer();
-  //    } else {
-  //      // end of solve
-  //      $scope.stopTimer();
-  //      $scope.interval = null;
-  //      console.log($scope.time);
-  //
-  //      var solveObject = {
-  //        solveTime: $scope.time,
-  //        solveType: '3x3x3'
-  //      };
-  //
-  //      // $http.post('/newSolve', solveObject).success(function(response) {
-  //      //     //$scope.users = response;
-  //      // });
-
-  //    }
-  //  }
-  //};
+  // receive solve result from server (may not necessarily be you) 
+  io.on('solve_result', function(res) {
+    $scope.last_solve = res;
+    console.log(res);
+    $scope.solves.push(res);
+  });
 
   $scope.startTimer = function() {
     $scope.now = Date.now();
@@ -152,7 +146,7 @@ app.controller('contestController', function($scope, $http, $interval) {
 
   $scope.stopTimer = function() {
     $interval.cancel($scope.interval);
-  }
+  };
   // end of timer code
 
 });

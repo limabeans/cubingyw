@@ -17,6 +17,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js"></script>
   <!-- Local -->
   <link rel="stylesheet" type="text/css" href="css/style.css">
+  <!--<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>-->
+  <script src="/socket.io/socket.io.js"></script>
   <script src="js/contest.js"></script>
   <!-- Title -->
   <link rel="shortcut icon" type="image/x-icon" href="images/cubeLogo.png"/>
@@ -54,18 +56,34 @@
   </div>
   <div class="col-md-6">
     <div class="jumbotron chatJumbotron">
-      <table class="table table-condensed table-striped table-bordered table-hover">
-        <thead>
-        <tr>
-          <th class="centered">Active Users</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="user in users">
-          <td>{{user.firstName}} {{user.lastName}}</td>
-        </tr>
-        </tbody>
-      </table>
+      <div class="col-md-6">
+        <table class="table table-condensed table-striped table-bordered table-hover">
+          <thead>
+          <tr>
+            <th class="centered">Active Users</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="user in users">
+            <td>{{user.firstName}} {{user.lastName}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-6">
+        <table class="table table-condensed table-striped table-bordered table-hover">
+          <thead>
+          <tr>
+            <th class="centered">Times</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="solve in solves">
+            <td>{{solve.solveTime}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
   <div class="col-md-12">

@@ -1,11 +1,21 @@
-var express = require('express');
-var app = express();
+var express = require('express.io');
+var app = require('express.io')();
+
+app.http().io();
+
+
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var mongoose = require('mongoose');
 var passport = require('passport'),
-  FacebookStrategy = require('passport-facebook').Strategy;
+
+FacebookStrategy = require('passport-facebook').Strategy;
 var fs = require('fs');
+
+var http = require('http').Server(app);
+
+var socketio = require('socket.io');
+var io = socketio(http);
 
 // configuration
 app.configure(function() {
@@ -187,21 +197,25 @@ app.get('/userList', function(req,res) {
 });
 
 
-// POST for new solve result
-// app.post('/newSolve', function(req,res) {
-//   var solve = new Solve();
-//   solve.solveTime = req.body.solveTime;
-//   solve.solveType = req.body.solveType;
 
-//   solve.save(function(err) {
-//     if (err) throw err;
-//   });
+// received from a client after finishing a solve
+app.io.route('finished_solve', function(req) {
+  
+  // solve is the solve Object from the client
+  var solve = req.data;
+  console.log(solve);
+  var sessionID = req.sessionID;
+  var user = req.sessionStore.sessions[sessionID];
+  //console.log(user);
+  // broadcast that result to all clients
+  app.io.broadcast('solve_result', solve);
+});
 
-
-// });
 
 // listen on port and ip
 var ip = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
 var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 
-app.listen(port, ip);
+
+app.listen(port,ip);
+
