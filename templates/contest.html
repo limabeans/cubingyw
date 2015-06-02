@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<<<<<<< HEAD
   <head lang="en">
     <meta charset="UTF-8">
 
@@ -73,5 +74,49 @@
       <ul>
       </ul>
     </div>
-  </body>
+  </div>
+</div>
+<div class="container">
+  <div class="page-header">
+    <h1>Contest</h1>
+  </div>
+  <div class="col-md-2">
+    <table class="table table-condensed table-striped table-bordered table-hover">
+      <thead>
+      <tr>
+        <th class="centered">Active Users</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="user in users">
+        <td>{{user.firstName}} {{user.lastName}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-5">
+    <div class="jumbotron centered vertical-middle">
+      <h1>
+        {{timer_display}}
+      </h1>
+    </div>
+  </div>
+  <div class="col-md-5">
+    <table class="table table-condensed table-striped table-bordered table-hover">
+      <thead>
+      <tr>
+        <th class="centered">#</th>
+        <th class="centered" ng-repeat="user in results[0]">{{user.firstName}} {{user.lastName}}</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="result in results">
+        <td class="centered">{{results.indexOf(result)}}</td>
+        <td ng-repeat="solve in result">{{solve.time}} {{solve.penalty}} {{solve.comment}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
 </html>
