@@ -90,15 +90,21 @@ app.controller('contestController', function($scope, $http, $interval) {
 
   $scope.isTiming = 0;
   $scope.isKeydown = 0;
+  $scope.isTyping = 0;
 
   $scope.keydown = function(event) {
-    if ((event.which === 32) && ($scope.isKeydown == 0)) {
+    if ((event.which === 32) && ($scope.isKeydown === 0) && ($scope.isTyping === 0)) {
       $scope.isKeydown = 1;
       if ($scope.isTiming === 0) {
         $scope.timer_display = '0.000';
         $scope.timerStyle = {'color':'#33CC00'};
       } else if ($scope.isTiming === 1) {
         $scope.stopTimer();
+        var solveObject = {
+          solveTime: $scope.time,
+          solveType: '3x3x3'
+        };
+        io.emit('finished_solve', solveObject); // send to server after completing solve
         $scope.now = 0;
         $scope.time = 0;
         $scope.interval = null;
@@ -107,7 +113,7 @@ app.controller('contestController', function($scope, $http, $interval) {
   };
 
   $scope.keyup = function(event) {
-    if ((event.which === 32) && ($scope.isKeydown == 1)) {
+    if ((event.which === 32) && ($scope.isKeydown === 1) && ($scope.isTyping === 0)) {
       $scope.isKeydown = 0;
       if ($scope.isTiming === 0) {
         $scope.isTiming = 1;
@@ -115,13 +121,6 @@ app.controller('contestController', function($scope, $http, $interval) {
         $scope.startTimer();
       } else if ($scope.isTiming === 1) {
         $scope.isTiming = 0;
-        var solveObject = {
-          solveTime: $scope.time,
-          solveType: '3x3x3'
-        };
-
-        // send to server after completing solve
-        io.emit('finished_solve', solveObject);
       }
     }
   };

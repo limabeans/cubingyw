@@ -28,20 +28,16 @@
     padding-right:30px;
 }
 
-.timerJumbotron, .chatJumbotron {
+.timerJumbotron {
     height:calc((100vh - 150px) / 2);
-    max-height:800px;
     padding:25px;
     overflow-y:scroll;
     border-radius:5px;
 }
 
-.resultsJumbotron {
+.chatJumbotron, .resultsJumbotron {
     height:calc((100vh - 150px) / 2);
-    max-height:800px;
-    padding:25px;
     overflow-y:scroll;
-    border-radius:5px;
 }
 
 #scramble {
@@ -52,4 +48,9 @@
 #timer {
     font-size:69pt;
     margin:5px;
+}
+
+.result-row {
+    margin-top:5px;
+    margin-bottom:5px;
 }

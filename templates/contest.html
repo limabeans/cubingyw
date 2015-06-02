@@ -52,10 +52,27 @@
     <div class="jumbotron timerJumbotron centered">
       <p id="scramble">{{scramble}}</p>
       <p id="timer" ng-style="timerStyle">{{timer_display}}</p>
+      <div class="row">
+        <div class="result-row col-lg-4 col-md-6 col-sm-4">
+          <div class="input-group">
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-success" tabindex="-1" ng-click=""><span class="glyphicon glyphicon-ok"></span></button>
+              <button type="button" class="btn btn-warning" tabindex="-1" ng-click=""><span class="glyphicon glyphicon-plus"></span></button>
+              <button type="button" class="btn btn-danger" tabindex="-1" ng-click=""><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+          </div>
+        </div>
+        <div class="result-row col-lg-6 col-md-4 col-sm-6">
+          <input type="text" class="form-control" max-length="69" ng-focus="isTyping=1" ng-blur="isTyping=0">
+        </div>
+        <div class="result-row col-xs-2">
+          <button class="btn btn-primary" ng-click="">Submit</button>
+        </div>
+      </div>
     </div>
   </div>
   <div class="col-md-6">
-    <div class="jumbotron chatJumbotron">
+    <div class="chatJumbotron">
       <div class="col-md-6">
         <table class="table table-condensed table-striped table-bordered table-hover">
           <thead>
@@ -87,7 +104,7 @@
     </div>
   </div>
   <div class="col-md-12">
-    <div class="jumbotron resultsJumbotron">
+    <div class="resultsJumbotron">
       <table class="table table-condensed table-striped table-bordered table-hover">
         <thead>
         <tr>
