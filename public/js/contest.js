@@ -1,5 +1,3 @@
-var SPACEBAR = 32;
-
 var app = angular.module('cubingjApp', ['ui.bootstrap']);
 
 // controller for the home page and links page
@@ -75,80 +73,72 @@ app.controller('contestController', function($scope, $http, $interval) {
   $scope.results[2][1].penalty = '(DNF)';
   $scope.results[2][1].comment = 'yolo';
 
-  //$scope.results = [];
-  //
-  //$scope.results[0] = {};
-  //$scope.results[1] = {};
-  //
-  //$scope.results[0].firstName = 'Tim';
-  //$scope.results[0].lastName = 'Wong';
-  //
-  //$scope.results[1].firstName = 'Angel';
-  //$scope.results[1].lastName = 'Lim';
-  //
-  //$scope.results[0].solves = [];
-  //$scope.results[0].solves[0] = {};
-  //$scope.results[0].solves[0].time = '6.25';
-  //$scope.results[0].solves[0].penalty = '(+2)';
-  //$scope.results[0].solves[0].comment = 'omg puss two';
-  //$scope.results[0].solves[1] = {};
-  //$scope.results[0].solves[1].time = '12.69';
-  //$scope.results[0].solves[1].penalty = '';
-  //$scope.results[0].solves[1].comment = 'uh oh riley time';
-  //$scope.results[0].solves[2] = {};
-  //$scope.results[0].solves[2].time = '8.48';
-  //$scope.results[0].solves[2].penalty = '';
-  //$scope.results[0].solves[2].comment = 'yw';
-  //
-  //$scope.results[1].solves = [];
-  //$scope.results[1].solves[0] = {};
-  //$scope.results[1].solves[0].time = '18.28';
-  //$scope.results[1].solves[0].penalty = '(DNF)';
-  //$scope.results[1].solves[0].comment = 'yolo';
-  //$scope.results[1].solves[1] = {};
-  //$scope.results[1].solves[1].time = '15.25';
-  //$scope.results[1].solves[1].penalty = '';
-  //$scope.results[1].solves[1].comment = 'dgaf';
-  //$scope.results[1].solves[2] = {};
-  //$scope.results[1].solves[2].time = '20.25';
-  //$scope.results[1].solves[2].penalty = '';
-  //$scope.results[1].solves[2].comment = 'dgaf';
-
-
   // code involving the timer
   $scope.now = 0; // updated using Date.now()
   $scope.time = 0;
-  $scope.timer_display=0.000;
+  $scope.timer_display = '0.000';
   $scope.timer_delay = 10;
   $scope.interval = null;
 
-  $scope.spacePressed = function(event) {
-    if(event.which === SPACEBAR) {
-      if(!$scope.interval) {
-        // start of solve
-        $scope.time = 0.000;
-        $scope.start();
-      } else {
-        // end of solve
-        $scope.stop();
+  // hard-coded scramble
+  $scope.scramble = "R2 L2 B' D' L D' L2 U2 B' D' R2 U' R' B2 D' F' D L2 R2 U2";
+
+  $scope.isTiming = 0;
+  $scope.isKeydown = 0;
+
+  $scope.keydown = function(event) {
+    if ((event.which === 32) && ($scope.isKeydown == 0)) {
+      $scope.isKeydown = 1;
+      if ($scope.isTiming === 0) {
+        $scope.timer_display = '0.000';
+        $scope.timerStyle = {'color':'#33CC00'};
+      } else if ($scope.isTiming === 1) {
+        $scope.stopTimer();
         $scope.interval = null;
-        console.log($scope.time);
-
-        var solveObject = {
-          solveTime: $scope.time,
-          solveType: '3x3x3'
-        };
-
-        // $http.post('/newSolve', solveObject).success(function(response) {
-        //     //$scope.users = response;
-        // });
-
-
       }
     }
   };
 
-  $scope.start = function() {
+  $scope.keyup = function(event) {
+    if ((event.which === 32) && ($scope.isKeydown == 1)) {
+      $scope.isKeydown = 0;
+      if ($scope.isTiming === 0) {
+        $scope.isTiming = 1;
+        $scope.timerStyle = {'color':'black'};
+        $scope.startTimer();
+      } else if ($scope.isTiming === 1) {
+        $scope.isTiming = 0;
+      }
+    }
+  };
+
+  //$scope.spacePressed = function(event) {
+  //  console.log(event);
+  //  if(event.which === 32) {
+  //    if(!$scope.interval) {
+  //      // start of solve
+  //      $scope.time = 0.000;
+  //      $scope.startTimer();
+  //    } else {
+  //      // end of solve
+  //      $scope.stopTimer();
+  //      $scope.interval = null;
+  //      console.log($scope.time);
+  //
+  //      var solveObject = {
+  //        solveTime: $scope.time,
+  //        solveType: '3x3x3'
+  //      };
+  //
+  //      // $http.post('/newSolve', solveObject).success(function(response) {
+  //      //     //$scope.users = response;
+  //      // });
+
+  //    }
+  //  }
+  //};
+
+  $scope.startTimer = function() {
     $scope.now = Date.now();
 
     $scope.interval = $interval(function() {
@@ -160,7 +150,7 @@ app.controller('contestController', function($scope, $http, $interval) {
     }, $scope.timer_delay);
   };
 
-  $scope.stop = function() {
+  $scope.stopTimer = function() {
     $interval.cancel($scope.interval);
   }
   // end of timer code

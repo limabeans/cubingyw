@@ -27,3 +27,29 @@
     padding-left:30px;
     padding-right:30px;
 }
+
+.timerJumbotron, .chatJumbotron {
+    height:calc((100vh - 150px) / 2);
+    max-height:800px;
+    padding:25px;
+    overflow-y:scroll;
+    border-radius:5px;
+}
+
+.resultsJumbotron {
+    height:calc((100vh - 150px) / 2);
+    max-height:800px;
+    padding:25px;
+    overflow-y:scroll;
+    border-radius:5px;
+}
+
+#scramble {
+    font-size:16pt;
+    margin:5px;
+}
+
+#timer {
+    font-size:69pt;
+    margin:5px;
+}

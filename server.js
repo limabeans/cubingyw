@@ -143,11 +143,10 @@ app.get('/userInfo', function(req, res) {
     res.send(req.user);
 });
 
-var interval = 2000;
 setInterval(function() {
     User.find({}, function(err, result) {
         for (var i = 0; i < result.length; i++) {
-            if (Date.now() - 3000 > result[i].lastPing) {
+            if (Date.now() - 5000 > result[i].lastPing) {
                 User.update({_id: result[i]._id},
                   {$set: {active: false}},
                   function (err, response) {
@@ -165,7 +164,7 @@ setInterval(function() {
             }
         }
     });
-}, interval);
+}, 1000);
 
 // update user time stamp
 app.post('/userTimeStamp', function(req,res) {
