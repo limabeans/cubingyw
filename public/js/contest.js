@@ -35,6 +35,15 @@ app.controller('contestController', function($scope, $http, $interval) {
   $scope.interval = null;
 
 
+  // express.io global variable
+  io = io.connect();
+  
+  // receive solve result from server (may not necessarily be you) 
+  io.on('solve_result', function(res) {
+    console.log(res);
+  });
+  
+
   $scope.spacePressed = function(event) {
     if(event.which === SPACEBAR) {
       if(!$scope.interval) {
@@ -42,6 +51,7 @@ app.controller('contestController', function($scope, $http, $interval) {
         $scope.time = 0.000;
         $scope.start();
       } else {
+
         // end of solve
         $scope.stop();
         $scope.interval = null;
@@ -51,12 +61,10 @@ app.controller('contestController', function($scope, $http, $interval) {
           solveTime: $scope.time,
           solveType: '3x3x3'
         };
-        
-        // $http.post('/newSolve', solveObject).success(function(response) {
-        //     //$scope.users = response;
-        // });
 
-        
+        // send to server after completing solve
+        io.emit('finished_solve', solveObject);
+          
       }
     }
   };
