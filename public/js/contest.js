@@ -99,8 +99,9 @@ app.controller('contestController', function($scope, $http, $interval) {
         $scope.timerStyle = {'color':'#33CC00'};
       } else if ($scope.isTiming === 1) {
         $scope.stopTimer();
+        $scope.now = 0;
+        $scope.time = 0;
         $scope.interval = null;
-
       }
     }
   };
@@ -147,7 +148,6 @@ app.controller('contestController', function($scope, $http, $interval) {
   $scope.stopTimer = function() {
     $interval.cancel($scope.interval);
   };
-  // end of timer code
 
 });
 
