@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var multer = require('multer');
 var mongoose = require('mongoose');
 var passport = require('passport'),
-    FacebookStrategy = require('passport-facebook').Strategy;
+  FacebookStrategy = require('passport-facebook').Strategy;
 var fs = require('fs');
 
 // configuration
@@ -83,45 +83,45 @@ var User = mongoose.model('User', new Schema ({
 
 // Solve Schema
 var Solve = mongoose.model('Solve' ,new Schema ( {
-  id:ObjectId,
-  personID:String,
-  solveDate: {type: Date, default: Date.now },
-  roomID:String,
-  solveTime:Number,
-  solvePenalty:String,
-  solveType:String,
-  solveComment:String,
-  solveIndex:Number
+    id:ObjectId,
+    personID:String,
+    solveDate: {type: Date, default: Date.now },
+    roomID:String,
+    solveTime:Number,
+    solvePenalty:String,
+    solveType:String,
+    solveComment:String,
+    solveIndex:Number
 }));
 
 // Facebook login
 passport.use(new FacebookStrategy({
-        clientID: process.env.clientID,
-        clientSecret: process.env.clientSecret,
-        callbackURL: '/auth/facebook/callback'
-    }, function(accessToken, refreshToken, profile, done) {
-        process.nextTick(function() {
-            User.findOne({'email':profile.emails[0].value}, function(err, user) {
-                if (err)
-                    return done(err);
-                if (user)
-                    return done(null, user);
-                else {
-                    var newUser = new User();
-                    newUser.facebook_id = profile.id;
-                    newUser.firstName = profile.name.givenName;
-                    newUser.lastName = profile.name.familyName;
-                    newUser.email = profile.emails[0].value;
-                    newUser.provider = 'facebook';
-                    newUser.save(function(err) {
-                        if (err)
-                            throw err;
-                        return done(null, newUser);
-                    });
-                }
-            });
-        });
-    }
+      clientID: process.env.clientID,
+      clientSecret: process.env.clientSecret,
+      callbackURL: '/auth/facebook/callback'
+  }, function(accessToken, refreshToken, profile, done) {
+      process.nextTick(function() {
+          User.findOne({'email':profile.emails[0].value}, function(err, user) {
+              if (err)
+                  return done(err);
+              if (user)
+                  return done(null, user);
+              else {
+                  var newUser = new User();
+                  newUser.facebook_id = profile.id;
+                  newUser.firstName = profile.name.givenName;
+                  newUser.lastName = profile.name.familyName;
+                  newUser.email = profile.emails[0].value;
+                  newUser.provider = 'facebook';
+                  newUser.save(function(err) {
+                      if (err)
+                          throw err;
+                      return done(null, newUser);
+                  });
+              }
+          });
+      });
+  }
 ));
 
 // facebook authentication route
@@ -147,21 +147,21 @@ var interval = 2000;
 setInterval(function() {
     User.find({}, function(err, result) {
         for (var i = 0; i < result.length; i++) {
-            if (Date.now() - 2000 > result[i].lastPing) {
+            if (Date.now() - 3000 > result[i].lastPing) {
                 User.update({_id: result[i]._id},
-                    {$set: {active: false}},
-                    function (err, response) {
-                        if (err)
-                            throw err;
-                    });
+                  {$set: {active: false}},
+                  function (err, response) {
+                      if (err)
+                          throw err;
+                  });
             }
             else {
                 User.update({_id: result[i]._id},
-                    {$set: {active: true}},
-                    function (err, response) {
-                        if (err)
-                            throw err;
-                    });
+                  {$set: {active: true}},
+                  function (err, response) {
+                      if (err)
+                          throw err;
+                  });
             }
         }
     });
@@ -193,12 +193,12 @@ app.get('/userList', function(req,res) {
 //   var solve = new Solve();
 //   solve.solveTime = req.body.solveTime;
 //   solve.solveType = req.body.solveType;
-  
+
 //   solve.save(function(err) {
 //     if (err) throw err;
 //   });
 
-  
+
 // });
 
 // listen on port and ip
