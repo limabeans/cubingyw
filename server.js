@@ -198,8 +198,6 @@ app.get('/userList', function(req,res) {
 });
 
 
-<<<<<<< HEAD
-
 
 // received from a client after finishing a solve
 app.io.route('finished_solve', function(req) {
@@ -214,20 +212,6 @@ app.io.route('finished_solve', function(req) {
   app.io.broadcast('solve_result', solve);
 });
 
-=======
-// POST for new solve result
-// app.post('/newSolve', function(req,res) {
-//   var solve = new Solve();
-//   solve.solveTime = req.body.solveTime;
-//   solve.solveType = req.body.solveType;
-
-//   solve.save(function(err) {
-//     if (err) throw err;
-//   });
-
-
-// });
->>>>>>> 7f02226c41086c098a06c440fe5bfaa891fa17f4
 
 // listen on port and ip
 var ip = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
